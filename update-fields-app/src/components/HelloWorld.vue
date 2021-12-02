@@ -1,7 +1,7 @@
 <template>
   <div class="container demo-wrapper">
     <h1>{{ msg }}</h1>
-    <form id="uploadDocForm" class="container">
+    <form @submit="onSubmit" id="uploadDocForm" class="container">
       <div class="row">
         <label class="col-3 col-md-3 col-sm-12">Date </label>
         <div class="col-3 col-md-3 col-sm-12">
@@ -24,21 +24,37 @@
         </div>
       </div>
       <div class="row">
-        <label class="col-3 col-md-3 col-sm-12">
-            Another value:
-        </label>
+        <label class="col-3 col-md-3 col-sm-12"> Another value: </label>
         <div class="col-3 col-md-3 col-sm-12">
-          <input id="anotherValue" name="anotherValue">
-        </div>       
+          <input required id="anotherValue" name="anotherValue" />
+        </div>
+      </div>
+      <div class="row">
+        <label class="col-3">Tags: </label>
+        <div class="col-9">
+          <div 
+            v-for="(tag, i) in tagsValues"
+            v-bind:key="'customTag' + i"
+          >
+            <input
+              v-model="selectedTags"
+              type="checkbox"
+              name="customTag"
+              v-bind:key="'tag' + i"
+              v-bind:value="tag"
+            />
+            {{ tag }}
+          </div>
+        </div>
       </div>
       <div class="row selectFileArea">
         <div class="col-3 col-md-3 col-sm-12">
-          <input id="selectedFile" type="file" />
+          <input required id="selectedFile" type="file" />
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12">
-          <button type="submit" form="uploadDocForm" v-on:click="onSubmit">
+          <button type="submit" form="uploadDocForm">
             Upload file to SharePoint
           </button>
         </div>
@@ -50,25 +66,39 @@
 <script>
 import { signInWithMsal } from "../authenticatingWithMsal";
 import { uploadDocument } from "../uploadingDocWithGraph";
-import { typeValues } from "../fieldSelectValues";
+import { typeValues, tagsValues } from "../fieldSelectValues";
+import { ref } from 'vue';
 export default {
   name: "UploadIncidentForm",
   props: ["msg"],
   setup() {
+    const selectedTags = ref([]);
     const onSubmit = async (event) => {
       event.preventDefault();
       await signInWithMsal();
-      const filename = document.getElementById("selectedFile").files[0].name;
+      //Creating an object with the file metadata
+      const fileMetadata = {
+        filename: document.getElementById("selectedFile").files[0].name,
+        fileCustomDate: event.target["customDate"].value,
+        fileCustomType: event.target["customType"].value,
+        fileAnotherValue: event.target["anotherValue"].value,
+        fileTags: selectedTags.value
+      };
+
+      // Getting the file and creating an arrayBuffer object using FileReader.
       const fileToUplode = document.getElementById("selectedFile").files[0];
       const filereader = new FileReader();
       filereader.onload = async (event) => {
-        await uploadDocument(filename, event.target.result);
+        //Sending the fileMetadata and file as ArrayBuffer to the upload function
+       await uploadDocument(fileMetadata, event.target.result);
       };
       filereader.readAsArrayBuffer(fileToUplode);
     };
     return {
       onSubmit,
       typeValues,
+      tagsValues,
+      selectedTags
     };
   },
 };
@@ -91,19 +121,19 @@ export default {
   text-align: left;
 }
 
-.demo-wrapper button{
+.demo-wrapper button {
   padding: 10px;
   border-radius: 10px;
   background: #aed1ca;
   color: black;
   border: none;
 }
-.selectFileArea{
+.selectFileArea {
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #aed1ca;
 }
-.demo-wrapper button:hover{
+.demo-wrapper button:hover {
   background: #333333;
   color: white;
 }
