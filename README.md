@@ -15,7 +15,7 @@ This is a repo for democode of how to update different field valies in SharePoin
 > <a href="https://elischei.com/upload-files-to-sharepoint-with-javascript-using-microsoft-graph/" target="_blank">Upload files to SharePoint with JavaScript using Microsoft Graph and Microsoft Authentication Library</a> 
 > This blogpost describes the code related to authentication and uploading the file. It also shows you how to register your app and obtain your site-id - which you need to run the code. 
 > 
-> <a href="https://elischei.com/how-to-update-field-values-in-sharepoint-using-microsoft-graph" target="_blank"></a>How to update field values in SharePoint using Microsoft Graph. (coming soon). This blogpost describes how to update different field values in SharePoint using JavaScript and Microsoft Graph
+> <a href="https://elischei.com/how-to-update-field-values-in-sharepoint-using-microsoft-graph" target="_blank">How to update field values in SharePoint using Microsoft Graph.</a> This blogpost describes how to update different field values in SharePoint using JavaScript and Microsoft Graph
 
 Related repositories:
 [Upload file to SharePoint using Microsoft Graph and Microsoft Authentication Library](https://github.com/Eli-Schei/upload-files-to-sp-using-graph)
